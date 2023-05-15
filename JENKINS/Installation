@@ -83,6 +83,7 @@ Ici, "8081" a été choisi mais vous pouvez utiliser un autre port disponible.
                            5. Installer les clefs SSH
 
 -> Une fois connecté à Jenkins et un premier utilisateur administrateur créé.
+
 projetparis1@jenkins:~$
 $ pwd  -> /home/projetparis1
 $ mkdir .ssh
@@ -102,6 +103,8 @@ $ vim id_rsa_projetparis1.pub
 Voir le fichier sur discord
 
 $ chmod 644 id_rsa_projetparis1.pub
+
+$ chmod 600 
 
 
 
