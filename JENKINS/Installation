@@ -22,15 +22,24 @@ entrer le mot de passe root
 -> Créer un user sans mot de passe
 $ adduser --disabled-password --gecos "" projetparis1
 $ apt install wget
-$ hostnamectl set-hostname jenkins et $nano /etc/hosts mettre jenkins pour le host $ reboot ou $ sudo sed -i "s/debian/jenkins/g" /etc/hosts /etc/hostname && sudo reboot
+$ hostnamectl set-hostname jenkins
+$ nano /etc/hosts  -> mettre jenkins pour le host   
+[ Optionnel : la commande :$ sudo sed -i "s/debian/jenkins/g" /etc/hosts /etc/hostname && sudo reboot fonctionne aussi]
+$ reboot 
+
 $ su - projetparis1
 
                             3. Installer JENKINS
                            
 -> Aller sur le site de Jenkins : https://www.jenkins.io/download/ et récuperer le fichier .war  [https://get.jenkins.io/war-stable/2.387.3/jenkins.war]
--> user : projetparis1
+-> en tant que user : projetparis1
+
+
 $ wget https://get.jenkins.io/war-stable/2.387.3/jenkins.war
 
+--> ouvrez ce fichier avec java
+
+$ java -jar jenkins.war
 Lors de l'installation le message suivant devrait apparaitre dans les logs : 
 
 *************************************************************
