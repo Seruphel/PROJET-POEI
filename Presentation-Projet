@@ -1,0 +1,29 @@
+Projet_POEI
+Projet final POE Ingénieur de Production : Amirouche, Faniaha, Imen, Slava
+
+Objectif : Mise en place et supervision d'une plateforme CI-CD en production. La plateforme sera basée sur des machines virtuelles.
+
+Une première plateforme sera mise en place avec une base de données Oracle Database Entreprise (19c ou 21c).
+
+Image du projet. IMG_20230512_085027
+
+VM DEBIAN: 1 VM (Apache); 1 VM (Ansible); 1 VM (Jenkins); 1VM (Repository Store SFTP); 1VM (Springboot : Movie,Api,Tomcat); 1 VM Monitoring(Nagios) ;
+
+VM ROCKY LINUX: 1VM (Oracle)
+
+ETAPE 1 : Créer et installer une VM Jenkins ( 8 GB de ram, 4 processeurs, 2 coeurs par processeur, 30 GB HDD)
+
+1.a. Une fois l'installation terminer ajouter l'utilisateur au groupe sudo : su -
+apt install sudo adduser nom_utilisateur sudo reboot SNAPSHOT sudo apt update && sudo apt upgrade sudo apt install default-jdk wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+
+deb https://pkg.jenkins.io/debian-stable binary/
+
+Objectif : Arriver à automtiser complètement la procédure avec des scripts.
+
+SCRIPT : Script numéro 1 : Installation et configuration du serveur web apache.
+
+Script numéro 2 :
+
+Contrainte Technologique : Serveur Web : Apache https Base de données : Oracle => Rocky Linux // Bonus: PostgreSQL ( Une autre VM) Déploiement (Master et Orchestration) : Ansible Intrégration CI (build d'application) : Jenkins (Module SSH, configuration de credentials) Repository Store Artifacts : SFTP
+
+Produire : Script shell, Playbook,
