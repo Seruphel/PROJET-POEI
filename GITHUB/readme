@@ -1,0 +1,15 @@
+################################## GIT HUB README FOR PROJET POEI ############################################################
+
+-> git doit être install: apt install git 
+$ cd ~
+$ git clone https://github.com/Seruphel/PROJET-POEI.git
+
+-> Pour pousser des modifications sur notre repertoire distant
+
+$ git add .
+$ git commit -m "Votre commentaire ici"
+$ git config --global user.email "Vous@exemple.com"
+$ git config --global user.name "Utilisatueur"
+$ git push origin main
+$ git status
+  
