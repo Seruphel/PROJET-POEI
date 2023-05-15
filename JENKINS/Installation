@@ -90,23 +90,23 @@ $ mkdir .ssh
 $ cd .ssh/
 $ vim id_rsa_projetparis1  
 
--> coller le contenu de la clef privé dans le fichier:
-
-Voir le fichier sur discord
-
--> enrgistrer et quitter le fichier en faitsant :wq!
+-> coller le contenu de la clef privé dans le fichier: Voir le fichier sur discord
+-> enregistrer et quitter le fichier en faitsant :wq!
 
 $ chmod 600 id_rsa_projetparis1
 $ vim id_rsa_projetparis1.pub
--> coller le contenu de la clef public dans le fichier:
 
-Voir le fichier sur discord
+-> coller le contenu de la clef public dans le fichier: Voir le fichier sur discord
 
 $ chmod 644 id_rsa_projetparis1.pub
+$ vim config
 
-$ chmod 600 
+-> coller le contenu du fichier de config dans le fichier: Voir le fichier sur discord
+-> enregistrer et quitter le fichier en faitsant :wq!
 
-
+$ chmod 600 config
+$ cd ~
+$ git clone -b main git@github.com:matthcol/movieapi2k3.git
 
                            
 
