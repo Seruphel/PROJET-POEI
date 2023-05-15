@@ -37,9 +37,10 @@ $ su - projetparis1
 
 $ wget https://get.jenkins.io/war-stable/2.387.3/jenkins.war
 
---> ouvrez ce fichier avec java
-
+  --> ouvrez ce fichier avec java
 $ java -jar jenkins.war
+
+
 Lors de l'installation le message suivant devrait apparaitre dans les logs : 
 
 *************************************************************
@@ -64,8 +65,10 @@ This may also be found at: /home/projetparis1/.jenkins/secrets/initialAdminPassw
                              4. Start JENKINS 
 
 -> Ouvrer votre navigateur et allez à l'adresse : http://localhost:8080   <- Si Jenkins est hébergé sur une autre machine il faut entrer l'IP correspondante à la place de localhost
--> Installer les plugings
--> Dans la création du premiers utilisateur mettre  nom admins : projetparis1 
+
+-> Installer les plugings suggéré
+
+-> Dans la création du premiers utilisateur mettre  nom admin : projetparis1 
                                                     mot de passe : password
                                                     
 
