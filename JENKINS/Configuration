@@ -42,6 +42,26 @@ Tableau de bord -> Nouveau Item -> Saisissez un nom : movieapi -> Selectionner P
                 ])
 
 
+-> Dans le script  à la partie:
+       stage('Delivery') {
+            steps {
+                script {
+                    // Define details of the remote machine
+                    def remoteHost = 'CHANGER PAR L'IP DE VOTRE MACHINE'
+                    def remoteUser = "${params.USER}"
+                    def remotePath = '/home/delivery/stockage/movieapi.jar'
+
+                    // Build the full path of the JAR file
+                    def jarFileName = sh(script: 'ls target/*.jar', returnStdout: true).trim()
+                    def jarFilePath = "${env.WORKSPACE}/${jarFileName}"
+
+                    // Execute the scp command with the given credentials to transfer the JAR file to the remote machine
+                    sh "scp -i /home/projetparis1/.ssh/id_rsa_delivery ${jarFilePath} ${remoteUser}@${remoteHost}:${remotePath}"
+                }
+            }
+        }
+
+
 
 Pi
 
