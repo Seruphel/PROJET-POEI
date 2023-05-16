@@ -1,3 +1,31 @@
 #####################################################################
 
+Ouvrez un terminal sur votre système Debian 11.
+
+Exécutez la commande suivante pour générer la paire de clés SSH :
+
+ssh-keygen -t rsa -b 4096
+
+Cette commande spécifie que vous voulez utiliser l'algorithme RSA avec une taille de clé de 4096 bits. Vous pouvez également choisir un autre algorithme en remplaçant -t rsa par -t dsa ou -t ecdsa.
+
+Vous serez invité à spécifier le chemin du fichier dans lequel enregistrer la clé. Par défaut, il s'agit de ~/.ssh/id_rsa. Appuyez simplement sur "Entrée" pour accepter le chemin par défaut ou spécifiez un autre emplacement si vous le souhaitez.
+
+Ensuite, vous serez invité à entrer une passphrase facultative pour protéger votre clé. Si vous ne souhaitez pas définir de passphrase, vous pouvez simplement appuyer sur "Entrée". Cependant, il est recommandé de définir une passphrase pour une sécurité accrue.
+
+
+La commande ssh-keygen générera alors une paire de clés SSH : une clé privée (id_rsa) et une clé publique (id_rsa.pub). La clé privée doit être conservée de manière sécurisée sur l'hôte local, tandis que la clé publique sera placée sur l'hôte distant auquel vous souhaitez vous connecter.
+
+
+Pour copier la clé publique sur l'hôte distant, utilisez la commande ssh-copy-id suivie de l'adresse IP ou du nom d'hôte de l'hôte distant. 
+
+Par exemple : ssh-copy-id user@hote-distant
+
+Remplacez user par votre nom d'utilisateur sur l'hôte distant et hote-distant par l'adresse IP ou le nom d'hôte de l'hôte distant.
+
+Vous serez invité à saisir le mot de passe de l'utilisateur sur l'hôte distant. Une fois le mot de passe correctement saisi, la clé publique sera copiée sur l'hôte distant et ajoutée au fichier ~/.ssh/authorized_keys.
+
+À partir de là, vous devriez pouvoir vous connecter à l'hôte distant sans être invité à saisir un mot de passe, car la connexion se fera à l'aide de la clé SSH. Assurez-vous de conserver la clé privée en sécurité sur votre hôte local pour éviter tout accès non autorisé.
+
+
+
 
