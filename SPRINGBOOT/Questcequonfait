@@ -1,0 +1,13 @@
+CREER UNE VM   TOMCAT SPRINGBOOT
+
+OPENJDK 11 optionnel et 17 prime 
+
+utiliser ansible sur une machine distante ( user srvadmin@ansible) qui fait le deploy du backend (movie.jar) depuis le serv repository vers un autre serveur springboot.
+
+utiliser ansible sur une machine distante ( user srvadmin@ansible) qui fait le deploy du backend (moovieangular)  depuis le serv repository vers un autre serveur frontend angular.
+
+
+et moovieangular  un autre (apache) qui implique une machine distance angular
+
+
+
