@@ -25,10 +25,12 @@ Dans  : New credentials
 
 Tableau de bord -> Nouveau Item -> Saisissez un nom : movieapi -> Selectionner Pipeline -> OK.
 
+
 4. PIPELINE SCRIPT
+
 -> En bas de la page : Pipeline | Définition : Pipeline script : Coller le contenu du fichier jenkinsfile de ce repo github.
 
--> Dans le script à la partie :
+-> Dans le script à la partie stage('Git') :
 
  stage('Git') {
             steps {
@@ -42,14 +44,14 @@ Tableau de bord -> Nouveau Item -> Saisissez un nom : movieapi -> Selectionner P
                 ])
 
 
--> Dans le script  à la partie:
+-> Dans le script  à la partie stage('Delivery'):
        stage('Delivery') {
             steps {
                 script {
                     // Define details of the remote machine
                     def remoteHost = 'CHANGER PAR L'IP DE VOTRE MACHINE'
                     def remoteUser = "${params.USER}"
-                    def remotePath = '/home/delivery/stockage/movieapi.jar'
+                    def remotePath = '/home/delivery/stockage/movieapi.jar'    ( le repertoire stockage doit exister )
 
                     // Build the full path of the JAR file
                     def jarFileName = sh(script: 'ls target/*.jar', returnStdout: true).trim()
@@ -60,10 +62,14 @@ Tableau de bord -> Nouveau Item -> Saisissez un nom : movieapi -> Selectionner P
                 }
             }
         }
+        
+        
+5. LANCER SON PREMIER BUILD 
 
 
 
-Pi
+
+
 
                         
 
