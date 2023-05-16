@@ -12,4 +12,4 @@ $ git config --global user.email "Vous@exemple.com"
 $ git config --global user.name "Utilisatueur"
 $ git push origin main
 $ git status
-  
+$ git pull (pour mettre le repo local à jours)  
