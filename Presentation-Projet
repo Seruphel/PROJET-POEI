@@ -5,7 +5,15 @@ Objectif : Mise en place et supervision d'une plateforme CI-CD en production. La
 
 Une première plateforme sera mise en place avec une base de données Oracle Database Entreprise (19c ou 21c).
 
-Image du projet. https://cdn.discordapp.com/attachments/1105403378772738118/1107674850039971970/237914681-695da013-21fb-40ac-805e-b21715613c75.jpg
+Image du projet:
+
+
+
+
+
+
+
+
 
 VM DEBIAN: 1 VM (Apache); 1 VM (Ansible); 1 VM (Jenkins); 1VM (Repository Store SFTP); 1VM (Springboot : Movie,Api,Tomcat); 1 VM Monitoring(Nagios) ;
 
