@@ -28,7 +28,18 @@ Tableau de bord -> Nouveau Item -> Saisissez un nom : movieapi -> Selectionner P
 4. PIPELINE SCRIPT
 -> En bas de la page : Pipeline | Définition : Pipeline script : Coller le contenu du fichier jenkinsfile de ce repo github.
 
-->
+-> Dans le script à la partie :
+
+ stage('Git') {
+            steps {
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        url: 'git@github.com:matthcol/movieapi2k3.git',
+                        credentialsId: 'ICI COPIER COLLER L'ID TROUVER DANS : Tableau de bord -> Administrer Jenkins -> Credentials (Configure Credentials): ID'
+                    ]]
+                ])
 
 
 
