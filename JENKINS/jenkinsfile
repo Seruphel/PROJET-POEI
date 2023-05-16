@@ -26,7 +26,7 @@ pipeline {
                     branches: [[name: '*/main']],
                     userRemoteConfigs: [[
                         url: 'git@github.com:matthcol/movieapi2k3.git',
-                        credentialsId: '8c7465b8-03c3-45d3-8c1a-9457f902dad8'
+                        credentialsId: '7d7c231c-1f3f-4f36-9ed6-3ef0311ae054'
                     ]]
                 ])
                 sh "sed -i 's@<java.version>*</java.version>@<java.version>${params.Java_version}</java.version>@' pom.xml"
@@ -65,7 +65,7 @@ pipeline {
             steps {
                 script {
                     // Define details of the remote machine
-                    def remoteHost = '192.168.238.143'
+                    def remoteHost = '192.168.121.151'
                     def remoteUser = "${params.USER}"
                     def remotePath = '/home/delivery/stockage/movieapi.jar'
 
@@ -80,4 +80,3 @@ pipeline {
         }
     }
 }
-
