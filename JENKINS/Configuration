@@ -26,7 +26,9 @@ Dans  : New credentials
 Tableau de bord -> Nouveau Item -> Saisissez un nom : movieapi -> Selectionner Pipeline -> OK.
 
 4. PIPELINE SCRIPT
--> En bas de la page : Pipeline | Définition : Pipeline script : 
+-> En bas de la page : Pipeline | Définition : Pipeline script : Coller le contenu du fichier jenkinsfile de ce repo github.
+
+->
 
 
 
