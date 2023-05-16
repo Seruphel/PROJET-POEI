@@ -1,0 +1,37 @@
+############################################################################### CONFIGURATION DE JENKINS ###################################################################################################################
+
+-> Une fois que votre interface Jenkins est opérationnelle à l'adresse : http://VOTRE.IP.DE.MACHINE:8080
+
+1. CONFIGURATION DES OUTILS
+
+Tableau de bord -> Administrer Jenkins -> Configuration globale des outils -> JDK -> AJOUTER JDK | Dans JDK Nom : jdk11 | Dans JAVA_HOME : /usr/lib/jvm/java-11-openjdk-amd64
+                                                                              MAVEN -> AJOUTER MAVEN | Dans Maven Nom : M3
+                                                                              
+Appliquer et Enregistrer (en bas de la page)
+
+
+2. AJOUT DE CREDENTIAL POUR SE CONNECTER AU REPO DISTANT
+
+Tableau de bord -> Administrer Jenkins -> Credentials (Configure Credentials) -> Stores scoped to Jenkins -> Domains (globals) -> Add Credentials
+
+Dans  : New credentials
+                          -> Type: SSH Username with private key
+                          -> Username: matthcol
+                          -> Private Key : Enter directly -> Key -> ADD -> Coller la clef ssh privée
+
+
+
+3. CREATION D'UN PIPELINE
+
+Tableau de bord -> Nouveau Item -> Saisissez un nom : movieapi -> Selectionner Pipeline -> OK.
+
+4. PIPELINE SCRIPT
+-> En bas de la page : Pipeline | Définition : Pipeline script : 
+
+
+
+Pi
+
+                        
+
+
