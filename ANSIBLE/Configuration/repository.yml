@@ -1,0 +1,9 @@
+---
+- name: download openjdk17
+  hosts: repository
+  tasks:
+    - name: environnement java
+      ansible.builtin.apt:
+        name: openjdk17
+        state: present
+
