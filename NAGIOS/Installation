@@ -1,0 +1,33 @@
+############################################################ Nagios Installation ###########################################################################
+
+En tant que root et avec un utilisateur nagios déjà créé
+
+
+$ apt update
+$ apt upgrade
+$ apt install apache2 libapache2-mod-php php
+$ apt install wget unzip zip autoconf gcc libc6 make apache2-utils libgd-dev
+$ systemctl start apache2
+$ systemctl enable apache2
+$ wget https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.4.6.tar.gz
+$ tar -xvzf nagios-4.4.6.tar.gz
+$ usermod -a -G nagios www-data
+$ cd nagios-4.4.6/
+$ ./configure --with-httpd-conf=/etc/apache2/sites-enabled
+$ make all
+$ make install
+$ make install-init
+$ make install-commandmode
+$ systemctl enable nagios.service
+$ make install-config
+$ ls /etc/apache2/sites-enabled/
+$ make install-webconf
+$ a2enmod cgi
+$ systemctl restart apache2
+$ systemctl start nagios
+$ htpasswd -c /usr/local/nagios/etc/htpasswd.users User   --> à la place de User choisissez votre nom d'user et entrer ensuite un mot de passe
+$ a2enmod cgi
+$ systemctl restart apache2
+$ systemctl start nagios
+
+----> Connectez vous ensuite à l'interface  -> http://VOTRE.IP.ICI./nagios/
