@@ -75,7 +75,7 @@ name: installer nagios
 
     - name: Démarrer les services Nagios et Apache
       service:
-        name: "{{ item }}"
+        name: "{{ début }}"
         state: started
         enabled: yes
       loop:
