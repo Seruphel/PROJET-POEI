@@ -1,0 +1,57 @@
+// S'adapter en fonction de vos informations
+
+
+
+pipeline {
+    agent any
+    parameters {
+        string(name: 'USER', defaultValue: 'delivery', description: 'User of the delivery server')
+    }
+    tools {
+        // Installer NodeJS
+        nodejs "NodeJS"
+    }
+    stages {
+        stage('Git') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: 'devf1']], userRemoteConfigs: [[url: 'https://github.com/matthcol/movie_angular.git']]])
+            }
+        }
+         stage('Set Node.js Path') {
+            steps {
+                script {
+                    // Récupérer le chemin d'exécution de Node.js
+                    def nodePath = "/home/projetparis1/.nvm/versions/node/v12.22.5/bin"
+                    env.PATH = "${nodePath}:${env.PATH}"
+                }
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                sh "npm ci"
+            }
+        }
+        stage('Build') {
+            steps {
+                sh "ng build --prod"
+            }
+        }
+        stage('Delivery') {
+            steps {
+                script {
+                    // Définir les détails de la machine distante
+                    def remoteHost = '192.168.238.143'
+                    def remoteUser = "${params.USER}"
+                    def remotePath = '/home/delivery/stockage/movie_app'
+
+                    // Construire le chemin complet de l'artefact
+                    def artifactPath = "${env.WORKSPACE}/movie_angular@2/dist/movie-app"
+
+                    // Exécuter la commande scp avec les informations d'identification fournies pour transférer l'artefact vers la machine distante
+                    sh "scp -r ${artifactPath} ${remoteUser}@${remoteHost}:${remotePath}"
+                }
+            }
+        }
+    }
+}
+
