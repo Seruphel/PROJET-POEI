@@ -1,5 +1,5 @@
 name: installer nagios 
-  hosts: debian
+  hosts: nagios
   become: true
 
   tasks:
@@ -70,7 +70,7 @@ name: installer nagios
         executable: /bin/bash
       vars_prompt:
         - name: password
-          prompt: "password : "
+          prompt: "password :  "
           private: yes
 
     - name: Démarrer les services Nagios et Apache
