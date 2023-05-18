@@ -1,0 +1,36 @@
+
+
+## Créaction d'un répertoire de configuration pour postgresql
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+
+
+
+
+## Avant d'importer la clé pour le répertoire, il faut installer gnupg2 pour éviter le problème d'import des clés
+sudo apt install gnupg2
+
+
+
+
+## Maintenant, importer la clé officiel pour le répertoire
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+
+
+
+
+## Faire une mise à jour des paquets dans votre système:
+sudo apt-get update
+
+
+
+
+## Puis installer postgresql version 15 sur la vm
+   # Nb: si vous préciser pas la version avec le - , la distribution va installer la version 13 par défaut
+sudo apt -y install postgresql-15
+
+## Pour vérifier si le service postgresql marche, faire la commande:
+sudo systemctl status postgresql
+
+
+
+## Pour plus d'infos voir la documentation officielle dans: https://www.postgresql.org/download/linux/debian/ 

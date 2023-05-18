@@ -1,0 +1,4 @@
+## 1)installer le plugin NodeJS sur le serveur Jenkins en ligne:
+               # aller dans administration générale de Jenkins
+	       # puis cliquer sur configuration des outils
+               # 

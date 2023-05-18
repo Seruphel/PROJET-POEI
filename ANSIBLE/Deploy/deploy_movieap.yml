@@ -1,0 +1,21 @@
+---
+- name: create user application
+  hosts: springboot
+  become: true
+  tasks:
+    - name: user application
+      user:
+        name: application
+        shell: /usr/bin/bash
+        home: /home/application
+
+- name: copy the .jar to springboot
+  hosts: repository
+  tasks:
+    - name: copy movieapi.jar to repository
+      ansible.builtin.copy:
+        src: /home/delivery/stockage/movieapi.jar
+        dest: /tmp/movieapi.jar
+        remote_src: yes
+        delegate_to: springboot
+
