@@ -1,3 +1,7 @@
+## Juste changer l'adresse ip de delivery qui va recevoir le packer dans def remotehost
+
+######################################################################################
+
 pipeline {
     agent any
     parameters {
@@ -30,6 +34,13 @@ pipeline {
                     ]]
                 ])
                 sh "sed -i 's@<java.version>*</java.version>@<java.version>${params.Java_version}</java.version>@' pom.xml"
+                // Add the PostgreSQL dependency to the pom.xml file
+                sh '''sed -i "/<dependencies>/a \\
+                        \\\t<dependency>\\\n\
+                        \\\t\t<groupId>org.postgresql</groupId>\\\n\
+                        \\\t\t<artifactId>postgresql</artifactId>\\\n\
+                        
+                        \\\t</dependency>" pom.xml'''
             }
         }
 
@@ -45,7 +56,7 @@ pipeline {
             }
             post {
                 always {
-                    junit '**/target/surefire-reports/TEST-*.xml'
+                    junit '**/target/surefire-reports/TEST-*.xml'\\\t\t<scope>runtime</scope>\\\n\
                 }
             }
         }
@@ -80,3 +91,4 @@ pipeline {
         }
     }
 }
+
