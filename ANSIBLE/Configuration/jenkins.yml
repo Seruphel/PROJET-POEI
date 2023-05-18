@@ -1,8 +1,8 @@
 ---
-- name: create user and install projetparis1
+- name: creat user and install projetparis1
   hosts: jenkins
   vars_files:
-    - groupvars.yml
+    - jenkinsvars
   tasks:
     - name: create user projetparis1
       ansible.builtin.user:
@@ -24,7 +24,7 @@
         owner: projetparis1
         group: projetparis1
 
-- name: Install OpenJDK 11 and OpenJDK 17
+- name: Install OpenJDK 11
   hosts: jenkins
   become: yes
   tasks:
@@ -33,13 +33,3 @@
         name: openjdk-11-jdk
         state: present
 
-    - name: Install OpenJDK 17 package
-      package:
-        name: openjdk-17-jdk
-        state: present
-
-    - name: Start Jenkins
-      become_user: projetparis1
-      shell: java -jar "jenkins.war"
-      args:
-        chdir: "{{ dest_jenkins_war }}"
