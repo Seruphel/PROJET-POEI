@@ -1,8 +1,8 @@
 ---
-- name: creat user and install projetparis1
+- name: create user and install projetparis1
   hosts: jenkins
   vars_files:
-    - jenkinsvars
+    - groupvars.yml
   tasks:
     - name: create user projetparis1
       ansible.builtin.user:
@@ -24,7 +24,7 @@
         owner: projetparis1
         group: projetparis1
 
-- name: Install OpenJDK 11
+- name: Install OpenJDK 11 and OpenJDK 17
   hosts: jenkins
   become: yes
   tasks:
@@ -33,3 +33,19 @@
         name: openjdk-11-jdk
         state: present
 
+    - name: Install OpenJDK 17 package
+      package:
+        name: openjdk-17-jdk
+        state: present
+
+    - name: Copy jenkins.war to user's home directory
+      copy:
+        src: "{{ dest_jenkins_war }}/jenkins.war"
+        dest: "/home/projetparis1/jenkins.war"
+        owner: projetparis1
+        group: projetparis1
+        mode: "0644"
+
+    - name: Start Jenkins
+      become_user: projetparis1
+      shell: java -jar "/home/projetparis1/jenkins.war"
