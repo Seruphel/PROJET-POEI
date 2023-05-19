@@ -2,7 +2,7 @@
 - name: create user and install projetparis1
   hosts: jenkins
   vars_files:
-    - groupvars
+    - groupvars.yml
   tasks:
     - name: create user projetparis1
       ansible.builtin.user:
