@@ -1,7 +1,8 @@
-// S'adapter en fonction de vos informations
+## changer l'adresser ip sur def remoteHost car c'est l'adresse du user delivery
 
 
 
+#######################################################################################
 pipeline {
     agent any
     parameters {
@@ -26,13 +27,10 @@ pipeline {
                 }
             }
         }
-        stage('Install Dependencies') {
-            steps {
-                sh "npm ci"
-            }
-        }
         stage('Build') {
             steps {
+                 sh "sed -i 's@apiBaseUrl:http://localhost:8080/api@apiBaseUrl:http://192.168.238.143:8080/api@' src/environments/environment.prod.ts"
+                sh "npm ci"
                 sh "ng build --prod"
             }
         }
@@ -42,13 +40,13 @@ pipeline {
                     // Définir les détails de la machine distante
                     def remoteHost = '192.168.238.143'
                     def remoteUser = "${params.USER}"
-                    def remotePath = '/home/delivery/stockage/movie_app'
+                    def remotePath = '/home/delivery/stockage/movie-app'
 
                     // Construire le chemin complet de l'artefact
-                    def artifactPath = "${env.WORKSPACE}/movie_angular@2/dist/movie-app"
+                    def artifactPath = "${env.WORKSPACE}/dist/movie-app"
 
                     // Exécuter la commande scp avec les informations d'identification fournies pour transférer l'artefact vers la machine distante
-                    sh "scp -r ${artifactPath} ${remoteUser}@${remoteHost}:${remotePath}"
+                    sh "scp -i /home/projetparis1/.ssh/id_rsa_delivery -r  ${artifactPath} ${remoteUser}@${remoteHost}:${remotePath}"
                 }
             }
         }
