@@ -1,24 +1,28 @@
-## changer l'adresser ip sur def remoteHost car c'est l'adresse du user delivery
+## 1) changer juste l'adresse ip def remoteHost car c'est l'adresse de delivery sur le serveur repository
 
-
-
-#######################################################################################
+#######################################################################################"
 pipeline {
     agent any
+
     parameters {
         string(name: 'USER', defaultValue: 'delivery', description: 'User of the delivery server')
+        string(name: 'backend_URL', defaultValue: 'http://192.168.238.143:8080/api/', description: 'URL of the backend')
+        string(name: 'github', defaultValue: 'https://github.com/matthcol/movie_angular.git', description: 'Repository of the developer')
     }
+
     tools {
         // Installer NodeJS
         nodejs "NodeJS"
     }
+
     stages {
         stage('Git') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: 'devf1']], userRemoteConfigs: [[url: 'https://github.com/matthcol/movie_angular.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: 'devf1']], userRemoteConfigs: [[url: "${params.github}"]]])
             }
         }
-         stage('Set Node.js Path') {
+
+        stage('Set Node.js Path') {
             steps {
                 script {
                     // Récupérer le chemin d'exécution de Node.js
@@ -27,13 +31,15 @@ pipeline {
                 }
             }
         }
+
         stage('Build') {
             steps {
-                 sh "sed -i 's@apiBaseUrl:http://localhost:8080/api@apiBaseUrl:http://192.168.238.143:8080/api@' src/environments/environment.prod.ts"
+                sh "sed -i 's@BACKEND_BASE_URL@${params.backend_URL}@' src/environments/environment.prod.ts"
                 sh "npm ci"
                 sh "ng build --prod"
             }
         }
+
         stage('Delivery') {
             steps {
                 script {
@@ -46,7 +52,7 @@ pipeline {
                     def artifactPath = "${env.WORKSPACE}/dist/movie-app"
 
                     // Exécuter la commande scp avec les informations d'identification fournies pour transférer l'artefact vers la machine distante
-                    sh "scp -i /home/projetparis1/.ssh/id_rsa_delivery -r  ${artifactPath} ${remoteUser}@${remoteHost}:${remotePath}"
+                    sh "scp -i /home/projetparis1/.ssh/id_rsa_delivery -r ${artifactPath} ${remoteUser}@${remoteHost}:${remotePath}"
                 }
             }
         }
