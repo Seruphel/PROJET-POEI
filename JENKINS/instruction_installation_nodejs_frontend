@@ -1,0 +1,28 @@
+Sur la partie front end:
+Faire en sorte que le user projetparis1 a sa propre version de nodejs
+
+mettre projetparis1 en mode sudoers: sudo usermod -aG sudo projetparis1
+
+# installer la version de souhaité de nodejs avec la commande:
+nvm install v 12.22.5
+
+
+# Après j'ai vérifier la version de node et npm avec: 
+node v12.22.5
+npm v6.14.14
+
+# pour vérifier la version utiliser pour node avec la commande: 
+nvm use 12.22.5
+
+# Après avec  assurer que le chemin d'installation de Node.js se trouve dans: 
+/home/projetparis1/.nvm/versions/node/v12.22.5/bin/
+
+# Après avec  assurer que le chemin d'installation de npm se trouve dans:
+/home/projetparis1/.nvm/versions/node/v12.22.5/bin/
+
+Après j'ai utiliser ces chemins comme variables d'environnement de npm et node
+
+# Après j'ai installer angular cli sur le serveur jenkins avec la commande: 
+
+npm install -g @angular/cli@10.0.8
+
