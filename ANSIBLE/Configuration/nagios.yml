@@ -1,85 +1,89 @@
 ---
-- name: installer nagios 
+- name: Installer Nagios
   hosts: nagios
   become: true
 
   tasks:
-    - name: Installer les dependances
+    - name: Mise a jour des paquets
+      apt:
+        update_cache: yes
+        upgrade: safe
+
+    - name: Installation des paquets requis
       apt:
         name:
-          - build-essential
           - apache2
-          - php
-          - libgd-dev
           - libapache2-mod-php
-          - libperl-dev
-          - libssl-dev
-          - daemontools
+          - php
+          - wget
+          - unzip
+          - zip
+          - autoconf
+          - gcc
+          - libc6
+          - make
+          - apache2-utils
+          - libgd-dev
         state: present
 
-    - name: Telecharger Nagios
-      get_url:
-        url: "https://www.nagios.org/downloads/nagios-core/latest/nagios-nagios-4.4.6.tar.gz"
-        dest: /tmp/nagios.tar.gz
-
-    - name: Extraire les fichiers de Nagios
-      unarchive:
-        src: /tmp/nagios.tar.gz
-        dest: /tmp/nagios
-
-    - name: Compiler et installer Nagios
-      command: |
-        cd /tmp/nagios
-        ./configure --with-command-group=nagcmd
-        make all
-        make install
-        make install-commandmode
-        make install-init
-        make install-config
-        make install-webconf
-      args:
-        chdir: /tmp/nagios
-      register: nagios_install
-
-    - name: Verifier l'installation de Nagios
-      assert:
-        that:
-          - nagios_install.rc == 0
-        msg: "L'installation de Nagios a echoue."
-
-    - name: Ajouter un utilisateur Nagios
-      user:
-        name: nagios
-        comment: "nagios"
-        shell: /sbin/nologin
-        createhome: no
-
-    - name: nagios
-      group:
-        name: nagcmd
-        state: present
-
-    - name: Ajouter l'utilisateur Nagios au groupe nagcmd
-      user:
-        name: nagios
-        groups: nagcmd
-        append: yes
-
-    - name: Definir un mot de passe pour l'utilisateur Nagios
-      shell: echo "nagios:<password>" | chpasswd
-      args:
-        executable: /bin/bash
-      vars_prompt:
-        - name: password
-          prompt: "password :  "
-          private: yes
-
-    - name: Demarrer les services Nagios et Apache
+    - name: Demarrage du service Apache
       service:
-        name: "{{ debut }}"
+        name: apache2
         state: started
         enabled: yes
-      loop:
-        - nagios
-        - apache2
 
+    - name: Telechargement de Nagios
+      get_url:
+        url: "https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.4.6.tar.gz"
+        dest: /tmp/nagios.tar.gz
+
+    - name: Creer le repertoire de destination
+      file:
+        path: /tmp/nagios
+        state: directory      
+    
+    - name: Copy Nagios to user's home directory
+      copy:
+        src: "tmp/nagios.tar.gz"
+        dest: "/home/nagios/nagios.tar.gz"
+        remote_src: yes
+        owner: nagios
+        group: nagios
+        mode: "0644"
+
+    - name: Extraction des fichiers de Nagios
+      unarchive:
+        src: /home/nagios/nagios.tar.gz
+        dest: /home/nagios
+        remote_src: yes
+
+    - name: Modification du groupe de l'utilisateur www-data
+      command: usermod -a -G nagios www-data
+    
+    - name: Configuration de Nagios
+      command: >
+        ./configure --with-httpd-conf=/etc/apache2/sites-enabled
+        chdir: /home/nagios/nagios-4.4.6
+
+    - name: Compilation et installation de Nagios
+      command: make all && make install && make install-init && make install-commandmode && make install-config && make install-webconf
+      args:
+        chdir: /home/nagios/nagios-4.4.6
+
+    - name: Activation du module CGI pour Apache
+      command: a2enmod cgi
+
+    - name: Redemarrage du service Apache
+      service:
+        name: apache2
+        state: restarted
+
+    - name: Demarrage du service Nagios
+      service:
+        name: nagios
+        state: started
+
+    - name: Configuration du fichier de mots de passe
+      command: htpasswd -c /usr/local/nagios/etc/htpasswd.users Alviss
+      args:
+        creates: /usr/local/nagios/etc/htpasswd.users
