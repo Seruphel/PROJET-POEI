@@ -1,0 +1,7 @@
+Pour lancer un playbook ansible en yaml,
+
+
+faire une connection ssh avec l'hôte distant : ssh nomuser@addresseip 
+
+puis lancer la commande : ansible-playbook -b -K -u Utilisateur_Hote_Distant -k -i 00_inventory nom_du_playbook.yml
+
