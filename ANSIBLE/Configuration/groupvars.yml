@@ -9,4 +9,3 @@ dest_jenkins_war: '/tmp'
 # dbuser: "movie"
 # dbpassword: "password"
 # dbschema: "schema"
-
