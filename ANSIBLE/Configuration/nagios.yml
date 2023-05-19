@@ -1,9 +1,10 @@
-name: installer nagios 
+---
+- name: installer nagios 
   hosts: nagios
   become: true
 
   tasks:
-    - name: Installer les dépendances
+    - name: Installer les dependances
       apt:
         name:
           - build-essential
@@ -16,7 +17,7 @@ name: installer nagios
           - daemontools
         state: present
 
-    - name: Télécharger Nagios
+    - name: Telecharger Nagios
       get_url:
         url: "https://www.nagios.org/downloads/nagios-core/latest/nagios-nagios-4.4.6.tar.gz"
         dest: /tmp/nagios.tar.gz
@@ -40,11 +41,11 @@ name: installer nagios
         chdir: /tmp/nagios
       register: nagios_install
 
-    - name: Vérifier l'installation de Nagios
+    - name: Verifier l'installation de Nagios
       assert:
         that:
           - nagios_install.rc == 0
-        msg: "L'installation de Nagios a échoué."
+        msg: "L'installation de Nagios a echoue."
 
     - name: Ajouter un utilisateur Nagios
       user:
@@ -64,7 +65,7 @@ name: installer nagios
         groups: nagcmd
         append: yes
 
-    - name: Définir un mot de passe pour l'utilisateur Nagios
+    - name: Definir un mot de passe pour l'utilisateur Nagios
       shell: echo "nagios:<password>" | chpasswd
       args:
         executable: /bin/bash
@@ -73,11 +74,12 @@ name: installer nagios
           prompt: "password :  "
           private: yes
 
-    - name: Démarrer les services Nagios et Apache
+    - name: Demarrer les services Nagios et Apache
       service:
-        name: "{{ début }}"
+        name: "{{ debut }}"
         state: started
         enabled: yes
       loop:
         - nagios
         - apache2
+
