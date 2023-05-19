@@ -40,8 +40,9 @@
 
     - name: Copy jenkins.war to user's home directory
       copy:
-        src: "{{ dest_jenkins_war }}/jenkins.war"
+        src: "/tmp/jenkins.war"
         dest: "/home/projetparis1/jenkins.war"
+        remote_src: yes
         owner: projetparis1
         group: projetparis1
         mode: "0644"
