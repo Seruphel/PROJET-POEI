@@ -74,19 +74,14 @@
         cmd: make install
         chdir: /tmp/nagios-4.4.6/
 
-    - name: Installer la commande check_nrpe
-      command:
-        cmd: make install-plugin
-        chdir: /tmp/nagios-4.4.6/
-
-    - name: Installer les commandes standard
-      command:
-        cmd: make install-standard-plugins
-        chdir: /tmp/nagios-4.4.6/
-
     - name: Installer les fichiers init
       command:
         cmd: make install-init
+        chdir: /tmp/nagios-4.4.6/
+
+    - name: Installer commandmode
+      command:
+        cmd: make install-commandmode
         chdir: /tmp/nagios-4.4.6/
 
     - name: Activer le service Nagios
@@ -98,9 +93,6 @@
       command:
         cmd: make install-config
         chdir: /tmp/nagios-4.4.6/
-
-    - name: Verifier le repertoire des sites Apache
-      command: ls /etc/apache2/sites-enabled/
 
     - name: Installer la configuration web Nagios
       command:
