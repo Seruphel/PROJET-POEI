@@ -125,4 +125,4 @@
     - name: Creer un utilisateur pour utiliser nagios
       command:
         cmd: htpasswd -b -c /usr/local/nagios/etc/htpasswd.users monitor password
-        chdir: /home/nagios
+        chdir: /tmp/nagios-4.4.6/
