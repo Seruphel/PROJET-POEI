@@ -1,0 +1,23 @@
+---
+- name: Création de l'utilisateur frontadm et installation d'Apache HTTP Server
+  hosts: all
+  become: true
+  tasks:
+    - name: Créer l'utilisateur frontadm
+      user:
+        name: frontadm
+        state: present
+        shell: /bin/bash
+        create_home: yes
+
+    - name: Installer Apache HTTP Server
+      package:
+        name: httpd
+        state: present
+
+    - name: Démarrer le service Apache
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
