@@ -66,6 +66,8 @@ Tableau de bord -> Nouveau Item -> Saisissez un nom : movieapi -> Selectionner P
         
 5. LANCER SON PREMIER BUILD 
 
+lancer un pipeline avec jaava 17 et avoir une connection ssh de faite entre les deux hotes (jenkins et delivery)
+
 
 
 
