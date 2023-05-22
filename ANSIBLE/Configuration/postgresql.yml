@@ -1,71 +1,65 @@
 ---
-- name: install postgres
+- name: Configuration et installation de PostgreSQL
   hosts: postgresql
-  vars_files:
-    - groupvars.yml
+  become: true
+  become_method: sudo
+
   tasks:
-    - name: install ACL
-      ansible.builtin.apt:
-        name: acl
+    - name: Installer gnupg2
+      apt:
+        name: gnupg2
         state: present
 
+    - name: Importer la cle GPG de PostgreSQL
+      shell: "wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -"
 
-- name: install postgresql and start service
-  hosts: postgresql 
-  tasks:
-    - name: install postgresql db
-      ansible.builtin.apt:
-        name: postgresql-{{ pg_version }}
-        state: present 
-    - name: Start service postgres
-      ansible.builtin.service:
+    - name: Ajouter le depot PostgreSQL
+      apt_repository:
+        repo: "deb http://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+        state: present
+        filename: "pgdg.list"
+        update_cache: yes
+
+    - name: Installer PostgreSQL 15
+      apt:
+        name: postgresql-15
+        state: present
+
+    - name: Verifier le statut de PostgreSQL
+      service:
         name: postgresql
         state: started
-        enabled: true
+        enabled: yes
 
-- name: Create a new database with name "{{ dbname }}"
-  hosts: postgresql
-  become_user: postgres
-  tasks:
-    - name: create database
+    - name: Installer psycopg2 pour Python 3
+      apt:
+        name: python3-psycopg2
+        state: present
+
+    - name: Creation de la base de donnees
+      become_user: postgres
       community.postgresql.postgresql_db:
         state: present
-        name: "{{ dbname }}"
+        name: dbmovie
 
-    - name: create database user
+    - name: Creation de l'utilisateur
       become_user: postgres
-      community.postgresql.postgresql_user:
-        state: present
-        name: "{{ dbuser }}"
-        password: "{{ dbpassword }}"
+      postgresql_user:
+        name: movie
+        password: password
+        login_user: postgres
+        login_password: password
+        login_host: localhost
+        login_unix_socket: /var/run/postgresql
+        db: dbmovie
+        role_attr_flags: CREATEDB
 
-    - name: Create a new schema with name movie in test database
+    - name: Creation du schema
       become_user: postgres
-      community.postgresql.postgresql_schema:
-        name: "{{ dbschema }}"
-        state: present
-
-    - name: stop service postgres for change configue
-      ansible.builtin.service:
-        name: postgresql
-        state: stopped
-
-    - name: modify postgresql.conf - listen_adresses localhost to --> *
-      ansible.builtin.lineinfile:
-        path: /etc/postgresql/{{ pg_version }}/main/postgresql.conf
-        regexp: "^#?listen_addresses = '.*'*$"
-        line: "listen_addresses = '*'"
-        state: present
-
-    - name: "allow md5 connection for the db user"
-      ansible.builtin.lineinfile:
-        path: /etc/postgresql/{{ pg_version }}/main/pg_hba.conf
-        regexp: "^host\\s+all\\s+all\\s+127.0.0.1/32\\s+md5"
-        line: "host {{dbname}} {{dbuser}}  0.0.0.0/0   md5"
-        backup: yes
-
-    - name: Start service postgres
-      ansible.builtin.service:
-        name: postgresql
-        state: started
-
+      postgresql_query:
+        db: dbmovie
+        login_user: postgres
+        login_password: password
+        login_host: localhost
+        login_unix_socket: /var/run/postgresql
+        query: 'CREATE SCHEMA IF NOT EXISTS schema_name;'
