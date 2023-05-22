@@ -25,7 +25,7 @@ $ make install-webconf
 $ a2enmod cgi
 $ systemctl restart apache2
 $ systemctl start nagios
-$ htpasswd -c /usr/local/nagios/etc/htpasswd.users User   --> à la place de User choisissez votre nom d'user et entrer ensuite un mot de passe
+$ htpasswd -c /usr/local/nagios/etc/htpasswd.users User   --> à la place de User choisissez l'user monitor en tant qu'administrateur 
 $ a2enmod cgi
 $ systemctl restart apache2
 $ systemctl start nagios
