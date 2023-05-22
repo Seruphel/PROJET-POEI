@@ -6,7 +6,7 @@
 
 Tableau de bord -> Administrer Jenkins -> Configuration globale des outils -> JDK -> AJOUTER JDK | Dans JDK Nom : jdk11 | Dans JAVA_HOME : /usr/lib/jvm/java-11-openjdk-amd64
                                                                               MAVEN -> AJOUTER MAVEN | Dans Maven Nom : M3
-                                                                              
+                                                                           -> On peut aussi faire la même chose pour jdk17 /usr/lib/jvm/java-17-openjdk-amd64
 Appliquer et Enregistrer (en bas de la page)
 
 
