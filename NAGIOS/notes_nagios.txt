@@ -1,6 +1,6 @@
 NAGIOS
 
-est un outil de supervision de production tel que Zbbix ou Centreon.
+est un outil de supervision de production tel que Zabbix ou Centreon.
 il permet de surveiller et de garantir le bon fonctionnement des applications.
 
 La supervision va porter sur :
