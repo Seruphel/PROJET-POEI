@@ -21,7 +21,7 @@
         state: started
         enabled: true
 
-- name: Create a new database with name "{{dbname}}"
+- name: Create a new database with name "{{ dbname }}"
   hosts: postgresql
   become_user: postgres
   tasks:
