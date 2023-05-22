@@ -1,6 +1,8 @@
 ---
 - name: install postgres
   hosts: postgresql
+  vars_files:
+    - groupvars.yml
   tasks:
     - name: install ACL
       ansible.builtin.apt:
