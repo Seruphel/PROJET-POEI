@@ -49,7 +49,7 @@ Tableau de bord -> Nouveau Item -> Saisissez un nom : movieapi -> Selectionner P
             steps {
                 script {
                     // Define details of the remote machine
-                    def remoteHost = 'CHANGER PAR L'IP DE VOTRE MACHINE'
+                    def remoteHost = 'CHANGER PAR L'IP DE VOTRE MACHINE' /!\ IL SAGIT DE LA MACHINE delivery@repository /!\
                     def remoteUser = "${params.USER}"
                     def remotePath = '/home/delivery/stockage/movieapi.jar'    ( le repertoire stockage doit exister )
 
