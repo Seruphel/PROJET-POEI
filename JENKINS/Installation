@@ -109,12 +109,3 @@ $ vim config
 $ chmod 600 config
 $ cd ~
 $ git clone -b main git@github.com:matthcol/movieapi2k3.git
-
-                           
-
-
-
-
-
-   
-
