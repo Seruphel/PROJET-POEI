@@ -1,0 +1,62 @@
+NAGIOS
+
+est un outil de supervision de production tel que Zabbix ou Centreon.
+il permet de surveiller et de garantir le bon fonctionnement des applications.
+
+La supervision va porter sur :
+- les ressources physiques
+	il faut s'assurer que,
+	les CPU des ordinateurs concernés ne chauffent pas ;
+	les disques durs ne se remplissent pas sans contrôle ;
+	les cartes réseaux des équipements sont toujours opérationnelles ;
+	les barrettes mémoire ne sont pas défectueuses 
+
+- Le système
+	s'assurer que les systèmes d'exploitation (Unix/Linux, Windows ou autre) fonctionnent correctement ;
+	contrôler les messages d'erreur système, les mises à jour éventuelles des composants de l'OS, le noyau, les drivers, le nombre de processus actifs, le processus de démarrage automatique en cas de coupure électrique
+
+
+- Les services
+	Il faut s’assurer que les services Web sont fonctionnels, vérifier les bases de données, les annuaires, les serveurs FTP ou NAS, les services SSH ou WMI pour les connexions de maintenance, les processus de sauvegardes automatiques, etc.
+
+- Les réseaux
+	Bien entendu, il faut également s'assurer que les équipements d'interconnexion fonctionnent, que les routers sont toujours accessibles, que tous les ports des switchs /routers nécessaires sont opérationnels, que les bandes passantes paramétrées sont suffisantes, etc.
+
+Avec une bonne supervision, nous savons immédiatement sur quel aspect technique ou fonctionnel se trouve le point de blocage et le temps de réaction pour corriger est d'autant plus rapide.
+
+L'architecture de Nagios est composée de 3 éléments : 
+
+- L'ordonnanceur :
+	Il s'agit d'un processus qui se lance en tant que service système. Son mode de fonctionnement est simple mais très efficace : il paramètre des objets host et service, qui seront supervisés par l'intermédiaire d'un objet command. Celui-ci lancera, à intervalles réguliers et paramétrables, des sondes sous la forme de programmes exécutables. Les résultats de ces actions de supervision sont stockés dans des fichiers au format texte. Bien entendu, configurer des objets permet, entre autre, de :
+
+	observer le temps entre chaque exécution de la sonde ;
+
+	définir des seuils permettant de juger les résultats (aussi appelés « statuts », OK, WARNING ou CRITICAL, par exemple pour les objets de type service) ;
+
+	gérer efficacement les notifications vers les acteurs responsables de la maintenance de ces objets ;
+
+	indiquer un minimum de topologie concernant le schéma d'architecture réseau ;
+
+	déclencher des actions particulières sur certains statuts ;
+
+
+- Les plugins
+	Les plugins (aussi appelés « sondes ») sont des programmes qui fonctionnent de manière autonome et servent à superviser les caractéristiques des objets configurés. Parmi ces caractéristiques, on peut notamment citer la charge CPU, l'occupation de la mémoire ou du disque, les services HTTP, SSH, FTP, SNMP, PING, WMI, POP3, et beaucoup d'autres encore. Les plugins Nagios étant normalisés et très bien documentés, il est possible de coder soi-même un plugin spécifique à son besoin ;
+
+- L'interface Web d'administration
+
+
+Processus d'installation en quatre grandes étapes :
+
+la préparation du serveur, qui va héberger le service Nagios ;
+
+le téléchargement et la compilation des sources Nagios ;
+
+l’installation de l’arborescence Nagios ;
+
+la vérification de la connexion à l’interface d’administration de Nagios
+
+Création d'alias qui me permettrons de tester Nagios et de redammarer le service dans le fichier .bashrc.
+
+	
+

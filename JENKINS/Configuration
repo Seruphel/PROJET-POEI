@@ -6,7 +6,7 @@
 
 Tableau de bord -> Administrer Jenkins -> Configuration globale des outils -> JDK -> AJOUTER JDK | Dans JDK Nom : jdk11 | Dans JAVA_HOME : /usr/lib/jvm/java-11-openjdk-amd64
                                                                               MAVEN -> AJOUTER MAVEN | Dans Maven Nom : M3
-                                                                              
+                                                                           -> On peut aussi faire la même chose pour jdk17 /usr/lib/jvm/java-17-openjdk-amd64
 Appliquer et Enregistrer (en bas de la page)
 
 
@@ -58,13 +58,16 @@ Tableau de bord -> Nouveau Item -> Saisissez un nom : movieapi -> Selectionner P
                     def jarFilePath = "${env.WORKSPACE}/${jarFileName}"
 
                     // Execute the scp command with the given credentials to transfer the JAR file to the remote machine
-                    sh "scp -i /home/projetparis1/.ssh/id_rsa_delivery ${jarFilePath} ${remoteUser}@${remoteHost}:${remotePath}"
+                    sh "scp -i /home/projetparis1/.ssh/NOM DE LA CLEF SSH PRIVE SUR JENKINS ${jarFilePath} ${remoteUser}@${remoteHost}:${remotePath}"
                 }
             }
         }
         
         
-5. LANCER SON PREMIER BUILD 
+5. LANCER SON PREMIER BUILD BACKEND
+-> prerequis : avoir une connection ssh de faite entre les deux hotes (jenkins et delivery cf : https://github.com/Seruphel/PROJET-POEI/blob/main/JENKINS/connection_jenkis_host_delivery_host)
+
+lancer un pipeline avec comme configuration >  java 17 et les parametres indiqué dans le script
 
 
 
