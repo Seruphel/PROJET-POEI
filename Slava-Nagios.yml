@@ -1,0 +1,128 @@
+---
+- name: Installer Nagios sur Debian
+  hosts: nagios
+  become: true
+  tasks:
+    - name: Mettre a jour les packages
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Effectuer la mise a jour du systeme
+      apt:
+        upgrade: dist
+
+    - name: Installer les dependances Apache
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - apache2
+        - libapache2-mod-php
+        - php
+
+    - name: Installer les dependances Nagios
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - wget
+        - unzip
+        - zip
+        - autoconf
+        - gcc
+        - libc6
+        - make
+        - apache2-utils
+        - libgd-dev
+
+    - name: Demarrer le service Apache
+      service:
+        name: apache2
+        state: started
+        enabled: yes
+
+    - name: Telecharger Nagios
+      get_url:
+        url: "https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.4.6.tar.gz"
+        dest: "/tmp/nagios-4.4.6.tar.gz"
+
+    - name: Extraire les fichiers Nagios
+      unarchive:
+        src: "/tmp/nagios-4.4.6.tar.gz"
+        dest: "/tmp"
+        remote_src: yes
+
+    - name: Ajouter l'utilisateur www-data au groupe nagios
+      user:
+        name: www-data
+        groups: nagios
+        append: yes
+
+    - name: Configurer Nagios
+      command:
+        cmd: ./configure --with-httpd-conf=/etc/apache2/sites-enabled
+        chdir: /tmp/nagios-4.4.6/
+
+    - name: Compiler Nagios
+      command:
+        cmd: make all
+        chdir: /tmp/nagios-4.4.6/
+
+    - name: Installer Nagios
+      command:
+        cmd: make install
+        chdir: /tmp/nagios-4.4.6/
+
+#    - name: Installer la commande check_nrpe
+#      command:
+#        cmd: make install-plugin
+#        chdir: /tmp/nagios-4.4.6/
+
+#    - name: Installer les commandes standard
+#      command:
+#        cmd: make install-standard-plugins
+#        chdir: /tmp/nagios-4.4.6/
+
+    - name: Installer les fichiers init
+      command:
+        cmd: make install-init
+        chdir: /tmp/nagios-4.4.6/
+
+    - name: Installer commandmode
+      command:
+        cmd: make install-commandmode
+        chdir: /tmp/nagios-4.4.6/
+
+    - name: Activer le service Nagios
+      systemd:
+        name: nagios.service
+        enabled: yes
+
+    - name: Installer la configuration
+      command:
+        cmd: make install-config
+        chdir: /tmp/nagios-4.4.6/
+
+    - name: Installer la configuration web Nagios
+      command:
+        cmd: make install-webconf
+        chdir: /tmp/nagios-4.4.6/
+
+    - name: Activer le module CGI Apache
+      command: a2enmod cgi
+
+    - name: Redemarrer le service Apache
+      service:
+        name: apache2
+        state: restarted
+
+    - name: Demarrer le service Nagios
+      service:
+        name: nagios
+        state: started
+
+    - name: Creer un utilisateur pour utiliser nagios
+      command:
+        cmd: htpasswd -b -c /usr/local/nagios/etc/htpasswd.users monitor password
+        chdir: /home/nagios

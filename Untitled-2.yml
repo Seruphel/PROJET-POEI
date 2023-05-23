@@ -1,0 +1,73 @@
+
+---
+- name: Configuration et installation de PostgreSQL
+  hosts: postgresql
+  become: true
+  become_method: sudo
+
+  tasks:
+    - name: Installer gnupg2
+      apt:
+        name: gnupg2
+        state: present
+
+    - name: Importer la cle GPG de PostgreSQL
+      shell: "wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -"
+
+    - name: Ajouter le depot PostgreSQL
+      apt_repository:
+        repo: "deb http://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+        state: present
+        filename: "pgdg.list"
+        update_cache: yes
+
+    - name: Installer PostgreSQL 15
+      apt:
+        name: postgresql-15
+        state: present
+
+    - name: Verifier le statut de PostgreSQL
+      service:
+        name: postgresql
+        state: started
+        enabled: yes
+
+    - name: Installer psycopg2 pour Python 3
+      apt:
+        name: python3-psycopg2
+        state: present
+
+    - name: Creation de la base de donnees
+      become_user: postgres
+      community.postgresql.postgresql_db:
+        state: present
+        name: dbmovie
+
+    - name: Creation de l'utilisateur
+      become_user: postgres
+      postgresql_user:
+        name: movie
+        password: password
+        login_user: postgres
+        login_password: password
+        login_host: localhost
+        login_unix_socket: /var/run/postgresql
+        db: dbmovie
+        role_attr_flags: CREATEDB
+
+    - name: Creation du schema
+      become_user: postgres
+      postgresql_query:
+        db: dbmovie
+        login_user: postgres
+        login_password: password
+        login_host: localhost
+        login_unix_socket: /var/run/postgresql
+        query: 'CREATE SCHEMA IF NOT EXISTS schema_name;'
+
+    - name: "allow md5 connection for the db user"
+      ansible.builtin.lineinfile:
+        path: /etc/postgresql/15/main/pg_hba.conf
+        regexp: "^host\\s+all\\s+all\\s+127.0.0.1/32\\s+md5"
+        line: "host dbmovie movie  0.0.0.0/0   md5"
+        backup: yes

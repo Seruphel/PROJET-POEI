@@ -1,0 +1,208 @@
+######################################## INSTALLER JENKINS #####################################################
+
+ -> Après Installation de votre VM debian
+ -> Se connecter en root 
+ -> Avoir les droits sudo avec l'utilisateur courant
+     $ adduser jenkins sudo $ reboot
+ 
+                            1. Installer JAVA 
+
+$ sudo apt update
+$ sudo apt install openjdk-11-jre
+$ java -version
+openjdk version "11.0.12" 2021-07-20
+OpenJDK Runtime Environment (build 11.0.12+7-post-Debian-2)
+OpenJDK 64-Bit Server VM (build 11.0.12+7-post-Debian-2, mixed mode, sharing
+
+https://github.com/Seruphel/Projet_POEI
+                          
+                            2. Créer un user projetparis1
+ -> Se connecter en root                         
+$ su -
+entrer le mot de passe root
+
+-> Créer un user sans mot de passe
+$ adduser --disabled-password --gecos "" projetparis1
+$ apt install wget
+$ hostnamectl set-hostname jenkins et $nano /etc/hosts mettre jenkins pour le host $ reboot ou $ sudo sed -i "s/debian/jenkins/g" /etc/hosts /etc/hostname && sudo reboot
+$ su - projetparis1
+
+                            3. Installer JENKINS
+                           
+-> Aller sur le site de Jenkins : https://www.jenkins.io/download/ et récuperer le fichier .war  [https://get.jenkins.io/war-stable/2.387.3/jenkins.war]
+-> user : projetparis1
+$ wget https://get.jenkins.io/war-stable/2.387.3/jenkins.war
+
+Lors de l'installation le message suivant devrait apparaitre dans les logs : 
+
+*************************************************************
+*************************************************************
+*************************************************************
+
+Jenkins initial setup is required. An admin user has been created and a password gener                                                                                                                        ated.
+Please use the following password to proceed to installation:
+
+CLEFALPHANUMERIQUE
+
+This may also be found at: /home/projetparis1/.jenkins/secrets/initialAdminPassword
+
+*************************************************************
+*************************************************************
+*************************************************************
+
+-> Copier la clef alpha-numérique : CLEFALPHANUMERIQUE    <- Cette clef est unique à chaque installation et donc differente pour vous.
+
+                            /!\ OUVRER OU DUPLIQUER UN NOUVEAU TERMINAL IL NE FAUT PAS TOUCHER L'ANCIEN TERMINAL /!\
+
+                             4. Start JENKINS 
+
+-> Ouvrer votre navigateur et allez à l'adresse : http://localhost:8080   <- Si Jenkins est hébergé sur une autre machine il faut entrer l'IP correspondante à la place de localhost
+-> Installer les plugings
+-> Dans la création du premiers utilisateur mettre  nom admins : projetparis1 
+                                                    mot de passe : password
+                                                    
+
+[OPTIONNEL] [OPTIONNEL] [OPTIONNEL] [OPTIONNEL] 4bis. Changer le PORT JENKINS  [OPTIONNEL] [OPTIONNEL] [OPTIONNEL] [OPTIONNEL] [OPTIONNEL]                
+                          	
+Si Jenkins ne parvient pas à démarrer car un port est en cours d'utilisation utiliser la commande : 
+$ systemctl edit jenkins 
+                        [Service]
+                        Environment="JENKINS_PORT=8081"
+Ici, "8081" a été choisi mais vous pouvez utiliser un autre port disponible.
+
+                           5. Installer les clefs SSH
+
+-> Une fois connecté à Jenkins et un premier utilisateur administrateur créé.
+projetparis1@jenkins:~$
+$ pwd  -> /home/projetparis1
+$ mkdir .ssh
+$ cd .ssh/
+$ vim id_rsa_projetparis1  
+
+-> coller le contenu de la clef privé dans le fichier:
+
+Voir le fichier sur discord
+
+-> enrgistrer et quitter le fichier en faitsant :wq!
+
+$ chmod 600 id_rsa_projetparis1
+$ vim id_rsa_projetparis1.pub
+-> coller le contenu de la clef public dans le fichier:
+
+Voir le fichier sur discord
+
+$ chmod 644 id_rsa_projetparis1.pub
+
+
+id_rsa_projetparis1
+
+-----BEGIN OPENSSH PRIVATE KEY-----
+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
+-----END OPENSSH PRIVATE KEY-----
+
+config
+
+Host github.com
+        Hostname github.com
+        IdentityFile=/home/projetparis1/.ssh/id_rsa_projetparis1                   
+
+
+id_rsa_projetparis1.pub
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCrBiy8XQhT47HOCUsTFrE04SEvKHFks5RDLVfK7DHYVpQctf26Z1pxdLO2qxSPTBoJiln4NN8uKzBWNuTafFOkawf3iBtEB4KrneM7R1K1WV56mI3dzNrvOtADkITnT6cdoH4TcubPSPfWKwSDufd3IbZ9ke8AwxpnRQwfIDN4mKFsSlsZbTa7Ig5QdevFXDOM9iuGg2GwjWVEpuGdciC1pE6OOTfL6fZfPCeQa/0kkFeJzUSfFLmGI10ZS9pkAayoM8b9d/pzyanC3G0Wa22x38Mda5o9WjdQbVmj2pa0ezhKDE9brV+2eex3wGcB7+zSfZcmNF2R8Ma9LZqSkonGWt5QS/KlG7+Gb0NgN6v8/VO6qMq2iqXdpQchiexGQqxi0QzdA8d7Awc/njF4Hqf8C4FQLDGM4fSwZgcc1KNc0+0zx7tBTrPIUegTauL/dkkoucQse0yqLWIH8yuOumKhpGzmCvm3b4WZX9GEfpGRfC/HNvrnp7WVcEl9Kcpw1fk= projetparis1@jenkins
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+ but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n\n    - name: Start Jenkins\n      ^ here\n"}
+
+
+  
+
+
+---
+- name: Création des fichiers Vim et clone du dépôt Git
+  hosts: jenkins
+  gather_facts: false
+  become: true
+  become_method: sudo
+
+  vars:
+    config_content: "{{ lookup('file', '/home/ansible/Documents/config_ansible') }}"
+    id_rsa_content: "{{ lookup('file', '/home/ansible/Documents/id_rsa_projetparis1') }}"
+    id_rsa_pub_content: "{{ lookup('file', '/home/ansible/Documents/id_rsa_projetparis1.pub') }}"
+
+  tasks:
+    - name: Créer le répertoire .ssh
+      file:
+        path: "/home/projetparis1/.ssh"
+        state: directory
+        mode: "0700"
+
+    - name: Créer le fichier config
+      copy:
+        dest: "/home/projetparis1/.ssh/config"
+        content: "{{ config_content }}"
+      mode: "0600"
+
+    - name: Créer le fichier id_rsa_projetparis1
+      copy:
+        dest: "/home/projetparis1/.ssh/id_rsa_projetparis1"
+        content: "{{ id_rsa_content }}"
+      mode: "0600"
+
+    - name: Créer le fichier id_rsa_projetparis1.pub
+      copy:
+        dest: "/home/projetparis1/.ssh/id_rsa_projetparis1.pub"
+        content: "{{ id_rsa_pub_content }}"
+      mode: "0644"
+
+    - name: Cloner le dépôt Git
+      git:
+        repo: "git@github.com:matthcol/movieapi2k3.git"
+        dest: "/home/projetparis1/movieapi2k3"
+        accept_hostkey: true
+        depth: 1
+        force: yes
+
+
+AUTOMATISER LA PARTIE DB 
+
+
+
+   
