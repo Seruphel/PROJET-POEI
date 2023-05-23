@@ -1,0 +1,383 @@
+---
+- name: Configuration et installation de PostgreSQL
+  hosts: postgresql
+  become: true
+  become_method: sudo
+
+  tasks:
+    - name: Installer gnupg2
+      apt:
+        name: gnupg2
+        state: present
+
+    - name: Importer la cle GPG de PostgreSQL
+      shell: "wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -"
+
+    - name: Ajouter le depot PostgreSQL
+      apt_repository:
+        repo: "deb http://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+        state: present
+        filename: "pgdg.list"
+        update_cache: yes
+
+    - name: Installer PostgreSQL 15
+      apt:
+        name: postgresql-15
+        state: present
+
+    - name: Verifier le statut de PostgreSQL
+      service:
+        name: postgresql
+        state: started
+        enabled: yes
+
+    - name: Installer psycopg2 pour Python 3
+      apt:
+        name: python3-psycopg2
+        state: present
+
+    - name: Configurer la locale
+      become_user: postgres
+      postgresql_query:
+        db: postgres
+        login_user: postgres
+        login_password: password
+        login_host: localhost
+        login_unix_socket: /var/run/postgresql
+        query: "UPDATE pg_database SET datcollate = 'en_US.UTF-8', datctype = 'en_US.UTF-8' WHERE datname = 'template0';"
+
+    - name: Creation de la base de donnees
+      become_user: postgres
+      postgresql_db:
+        name: dbmovie
+        encoding: UTF8
+        lc_collate: en_US.UTF-8
+        lc_ctype: en_US.UTF-8
+        template: template0
+        
+- name: Create a new database with name "{{ dbname }}"
+  hosts: postgresql
+  become_user: postgres
+  tasks:
+    - name: create database
+      community.postgresql.postgresql_db:
+        state: present
+        name: "{{ dbname }}"
+
+
+
+
+    - name: Creation de l'utilisateur
+      become_user: postgres
+      postgresql_user:
+        name: movie
+        password: password
+        login_user: postgres
+        login_password: password
+        login_host: localhost
+        login_unix_socket: /var/run/postgresql
+        db: dbmovie
+        role_attr_flags: CREATEDB
+
+    - name: Creation du schema
+      become_user: postgres
+      postgresql_query:
+        db: dbmovie
+        login_user: postgres
+        login_password: password
+        login_host: localhost
+        login_unix_socket: /var/run/postgresql
+        query: 'CREATE SCHEMA IF NOT EXISTS schema_name;'
+
+
+
+########################################################################
+---
+- name: Configuration et installation de PostgreSQL
+  hosts: postgresql
+  become: true
+  become_method: sudo
+
+  tasks:
+    - name: Installer gnupg2
+      apt:
+        name: gnupg2
+        state: present
+
+    - name: Importer la cle GPG de PostgreSQL
+      shell: "wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -"
+
+    - name: Ajouter le depot PostgreSQL
+      apt_repository:
+        repo: "deb http://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+        state: present
+        filename: "pgdg.list"
+        update_cache: yes
+
+    - name: Installer PostgreSQL 15
+      apt:
+        name: postgresql-15
+        state: present
+
+    - name: Verifier le statut de PostgreSQL
+      service:
+        name: postgresql
+        state: started
+        enabled: yes
+
+    - name: Installer psycopg2 pour Python 3
+      apt:
+        name: python3-psycopg2
+        state: present
+
+    - name: Creation de la base de donnees
+      become_user: postgres
+      community.postgresql.postgresql_db:
+        state: present
+        name: dbmovie
+
+    - name: Creation de l'utilisateur
+      become_user: postgres
+      postgresql_user:
+        name: movie
+        password: password
+        login_user: postgres
+        login_password: password
+        login_host: localhost
+        login_unix_socket: /var/run/postgresql
+        db: dbmovie
+        role_attr_flags: CREATEDB
+
+    - name: Creation du schema
+      become_user: postgres
+      postgresql_query:
+        db: dbmovie
+        login_user: postgres
+        login_password: password
+        login_host: localhost
+        login_unix_socket: /var/run/postgresql
+        query: 'CREATE SCHEMA IF NOT EXISTS schema_name;'
+
+
+
+####################################################################################################################
+
+
+postgres@postgresql:~$ exit
+déconnexion
+postgresql@postgresql:~$ sudo netstat -tuplan | grep listen
+postgresql@postgresql:~$ sudo netstat -tuplan | grep -listen
+grep : option invalide -- 't'
+Usage : grep [OPTION]... MOTIFS [FICHIER]...
+Exécutez « grep --help » pour obtenir des renseignements complémentaires.
+postgresql@postgresql:~$ sudo netstat -tuplan | grep -i listen
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      593/sshd: /usr/sbin
+tcp        0      0 127.0.0.1:631           0.0.0.0:*               LISTEN      559/cupsd
+tcp        0      0 127.0.0.1:5432          0.0.0.0:*               LISTEN      9604/postgres
+tcp        0      0 127.0.0.1:6010          0.0.0.0:*               LISTEN      771/sshd: postgresq
+tcp6       0      0 :::22                   :::*                    LISTEN      593/sshd: /usr/sbin
+tcp6       0      0 ::1:631                 :::*                    LISTEN      559/cupsd
+tcp6       0      0 ::1:5432                :::*                    LISTEN      9604/postgres
+tcp6       0      0 ::1:6010                :::*                    LISTEN      771/sshd: postgresq
+postgresql@postgresql:~$ sudo su - postgres
+postgres@postgresql:~$ psql
+psql (15.3 (Debian 15.3-1.pgdg110+1))
+Saisissez « help » pour l'aide.
+
+postgres=# \u
+commande \u invalide
+Essayez \? pour l'aide.
+postgres=# \?
+postgres=# \du
+                                              Liste des rôles
+ Nom du rôle |                                    Attributs                                    | Membre de
+-------------+---------------------------------------------------------------------------------+-----------
+ movie       | Créer une base                                                                  | {}
+ postgres    | Superutilisateur, Créer un rôle, Créer une base, Réplication, Contournement RLS | {}
+
+postgres=# \l
+                                                    Liste des bases de données
+    Nom    | Propriétaire | Encodage | Collationnement | Type caract. | Locale ICU | Fournisseur de locale |    Droits d'accès
+-----------+--------------+----------+-----------------+--------------+------------+-----------------------+-----------------------
+ dbmovie   | postgres     | UTF8     | fr_FR.UTF-8     | fr_FR.UTF-8  |            | libc                  |
+ postgres  | postgres     | UTF8     | fr_FR.UTF-8     | fr_FR.UTF-8  |            | libc                  |
+ template0 | postgres     | UTF8     | en_US.UTF-8     | en_US.UTF-8  |            | libc                  | =c/postgres          +
+           |              |          |                 |              |            |                       | postgres=CTc/postgres
+ template1 | postgres     | UTF8     | fr_FR.UTF-8     | fr_FR.UTF-8  |            | libc                  | =c/postgres          +
+           |              |          |                 |              |            |                       | postgres=CTc/postgres
+(4 lignes)
+
+postgres=#
+\q
+postgres@postgresql:~$ psql -U movie
+psql: erreur : la connexion au serveur sur le socket « /var/run/postgresql/.s.PGSQL.5432 » a échoué : FATAL:  authentification peer échouée pour l'utilisateur « movie »
+postgres@postgresql:~$ psql -U movie -d dbmovie
+psql: erreur : la connexion au serveur sur le socket « /var/run/postgresql/.s.PGSQL.5432 » a échoué : FATAL:  authentification peer échouée pour l'utilisateur « movie »
+postgres@postgresql:~$ exit
+déconnexion
+postgresql@postgresql:~$ postgresql -version
+-bash: postgresql : commande introuvable
+postgresql@postgresql:~$ postgresql -v
+-bash: postgresql : commande introuvable
+postgresql@postgresql:~$ postgres -v
+-bash: postgres : commande introuvable
+postgresql@postgresql:~$ pg_config --version
+PostgreSQL 15.3 (Debian 15.3-1.pgdg110+1)
+postgresql@postgresql:~$
+
+
+
+####################################################################################################################
+
+---
+- name: Création de l'utilisateur frontadm et installation d'Apache HTTP Server
+  hosts: all
+  become: true
+  tasks:
+    - name: Créer l'utilisateur frontadm
+      user:
+        name: frontadm
+        state: present
+        shell: /bin/bash
+        create_home: yes
+
+    - name: Installer Apache HTTP Server
+      package:
+        name: httpd
+        state: present
+
+    - name: Démarrer le service Apache
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+
+####################################################################################################################
+
+
+deploy: 
+
+Copier les artefacts
+			    : moviapie.jar 
+			    : movie-app 
+
+depuis  
+	  		    : delivery  
+
+vers 			    :le serveur repository pour les copiers 
+
+
+pour le premier chez le user jaroperator du serveur springboot et le second chez frontadm sur le serveur frontangular
+
+
+c'est juste prendre dans le dépot et les copiers dans leur serveur respectif
+
+
+
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDB13vKFo5gCxFjHvFP6Obhdv/+fn9AfwugdNmMeP+xGu7gVoLMLpUHTd8kVGetLLeH9VPPULV20k8zt/H/+76EbkJE4rhnnwrYreaG0gNfBfr2o2pazq2pgnUZzjQjVO/ViE7P2PVEjecVNSE/HKvv9ezUJ5wTFEndzR5LNqK0Ru9SFmkZBDmKH1eVNf2aZmUuTAsA3H0nyGaiSghWOqF4ckiRkNOE83tgi0FM+VkJPDNp4qyjrb/7D0EGIc+OG2ookwOl3dHrJ6chT95N6Z2fFdjIMwNxz9hCJxcCdSUBD9U9imZN12N9t7VSYlZ5HhhaJHlRjkSDh9AX1eOwFKAhFbMOsVucCUnv+E3Z2DJgzpe7yeByth+h0a762OyuEVRc7s5YDuJfqift1zjbM1q3ZXllByinEKknvbCiqU/JN2WiI6fPNBqcZSs3oGuH/C4jGhusKaDS3BXuyYZQgklwDZlzKR0XkNpYRrKU3mrr2bN3/kiojcqJ0lHlrMYaA60= projetparis1@jenkins
+
+
+
+/home/projetparis1/.nvm/versions/node/v16.20.0/bin/node
+
+
+Jenkins :     1  ls
+    2  cd .ssh/
+    3  ls
+    4  ssh-keygen
+    5  ls
+    6  nano id_rsa.pub
+    7  cat id_rsa.pub
+    8  ls
+    9  cd ~
+   10  pwd
+   11  cd -
+  
+
+
+
+Ansible est une plateforme open-source de  configuration et de déploiement d'infrastructures informatiques.
+
+Permet d'automatiser des tâches répétitives et complexes liées à la gestion des systèmes et des réseaux.
+
+Basée sur le langage YAML pour décrire l'état désiré des systèmes et des services.
+
+Il se base sur une architecture client-serveur et fonctionne en mode agentless, ce qui signifie qu'il n'a pas besoin d'installer d'agent sur les machines cibles.
+
+L'un des avantages d'Ansible c'est de prendre en charge un large éventail de systèmes d'exploitation, et de plateformes  tel que le cloud.
+
+Grâce à Ansible on favorise la reproduction de déploiements de machine car il permet de décrire l'infrastructure d'un système ainsi que ces configurations sous forme de code source.
+
+
+En résumé grâce à Ansible on simplifie la gestion et l'automatisation des infrastructures en utilisant une approche basée sur du code et des scriptes, offrant une solution puissante et adaptible pour les opérations de DevOps ou d'ingénieurie de production.
+
+
+MobaXterm pour l'accès distant aux ordinateurs et la gestion de fichiers.
+
+
+Cette commande est utilisée pour exécuter un playbook Ansible spécifique appelé "nagios.yml" sur un hôte Debian en utilisant l'outil Ansible.
+
+ansible-playbook: C'est la commande pour exécuter un playbook Ansible.
+
+-b : ça indique à Ansible de devenir superutilisateur lors de l'exécution des commandes sur l'hôte distant.
+
+-K: Cela demandera à l'utilisateur de fournir le mot de passe pour devenir superutilisateur.
+
+-u user : spécifie l'utilisateur distant avec lequel Ansible se connectera à l'hôte. 
+
+
+-k: Cette option demandera à l'utilisateur de fournir le mot de passe de l'utilisateur distant lors de la connexion.
+
+-i 00_inventory: spécifie le fichier d'inventaire à utiliser pour déterminer les hôtes sur lesquels le playbook doit être exécuté. 
+
+
+nagios.yml: C'est le nom du playbook Ansible à exécuter. Il s'agit du fichier YAML contenant les tâches et les rôles à exécuter sur l'hôte Debian.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
