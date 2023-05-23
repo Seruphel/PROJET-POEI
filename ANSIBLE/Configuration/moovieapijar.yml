@@ -1,0 +1,38 @@
+---
+- name: Récupérer et déployer le fichier movieapi.jar
+  hosts: repository
+  gather_facts: false
+
+  tasks:
+    - name: Récupérer le fichier movieapi.jar depuis la machine source
+      delegate_to: 192.168.121.151
+      fetch:
+        src: /home/delivery/stockage/movieapi.jar  # Chemin du fichier sur la machine source
+        dest: ./stockage/  # Chemin de destination sur la machine cible
+        flat: yes
+
+    - name: Vérifier si le fichier a été copié avec succès
+      stat:
+        path: /home/springboot/stockage/movieapi.jar
+      register: file_stats
+
+    - name: Afficher un message si le fichier a été copié avec succès
+      debug:
+        msg: "Le fichier movieapi.jar a été copié avec succès."
+      when: file_stats.stat.exists
+
+
+- name: Récupérer et envoyer un fichier
+  hosts: springboot
+  gather_facts: false
+
+  tasks:
+    - name: Récupérer le fichier depuis la machine source
+      fetch:
+        src: /home/ansible/PROJET-POEI/ANSIBLE/Configuration/stockage/movieapi.jar  # Chemin du fichier sur la machine source
+        dest: ./stockage  # Chemin de destination sur la machine locale
+
+    - name: Envoyer le fichier vers la machine de destination
+      copy:
+        src: "/home/ansible/PROJET-POEI/ANSIBLE/Configuration/stockage/movieapi.jar"  # Chemin du fichier récupéré
+        dest: /home/springboot/stockage  # Chemin de destination sur la machine de destination
